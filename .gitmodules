@@ -1,0 +1,3 @@
+[submodule "py_lab2"]
+	path = py_lab2
+	url = https://github.com/woojiin/py_lab2.git
