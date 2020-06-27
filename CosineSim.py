@@ -23,6 +23,11 @@ line1 = ""
 line2 = ""
 word_d ={}
 sent_list = []	
+result1 = []
+result2 =[]
+alldata = {}
+swlist = []
+count =0
 	
 def process_new_sentence(s):
 	sent_list.append(s)
@@ -31,6 +36,7 @@ def process_new_sentence(s):
 		if word not in word_d.keys():
 			word_d[word] = 0
 		word_d[word] += 1
+
 def make_vector(i):
 	v = []
 	s = sent_list[i]
@@ -42,50 +48,76 @@ def make_vector(i):
 				val += 1
 		v.append(val)
 	return v
-if __name__ == '__main__':
-	url1 = "http://arrow.apache.org/"
-	url2 = "http://arrow.apache.org/"
-	
-	res1 = cr.crawling(url1)
-	res2 = cr.crawling(url2)
-	swlist = []
-	for sw in stopwords.words("english"):
-		swlist.append(sw)
-	tokenized1 = word_tokenize(res1)
-	tokenized2 = word_tokenize(res2)
-	result1 = []
-	result2 = []
-	
-	for w in tokenized1:
-		if w not in swlist:
-			result1.append(w)
-	for w in tokenized2:
-		if w not in swlist:
-			result2.append(w)
 
-
-
+def CosineSimilarity():
 	res1 = ' '.join(result1)
 	res2 = ' '.join(result2)
 
 	process_new_sentence(res1)
 	process_new_sentence(res2)
 
-
 	v1 = make_vector(0)
 	v2 = make_vector(1)
 
-
 	dotpro = numpy.dot(v1,v2)
 	cossimil = dotpro/float(numpy.linalg.norm(v1)*numpy.linalg.norm(v2))
-	#es = Elasticsearch([{'host': es_host, 'port':es_port}], timeout= 30)
-	#e1 = {
-	#	"url" : 
-	#	"crawling data" :
-	#	"time":
-	#	"Cosine Similarity":
-	#}
-	#res= es.index(index = 'CosineSimilarity', doc_type = 'data', body = e1)
 	
 	print("dotproduct = ",dotpro)
 	print("Cosine Similarity = ", cossimil)
+
+
+
+if __name__ == '__main__':
+	url1 = "https://xmlgraphics.apache.org/"
+	es = Elasticsearch([{'host': es_host, 'port':es_port}], timeout= 30)
+	
+
+	#버튼 눌린 url크롤링하기
+	res1 = cr.crawling(url1)
+	swlist = []
+	for sw in stopwords.words("english"):
+		swlist.append(sw)
+	tokenized1 = word_tokenize(res1)
+
+	for w in tokenized1:
+		if w not in swlist:
+			result1.append(w)
+
+	
+
+	 # 엘라스틱 서치에서 모든 URL을 읽어와서 alldata에 담기
+	temp = {}
+	query = {"query": {"bool": {"must":[{"match": {"flag": 1}}]}}}
+	docs = es.search(index= 'word', body = query, size = 10)
+	if docs['hits']['total']['value']>0:	
+		for doc in docs['hits']['hits']:	
+			temp["url"] = doc['_source']['url']
+			temp["words"] = doc['_source']['words']
+			alldata[count] = temp
+			#print(alldata[count])
+			count = count + 1
+			
+	for i in range(0,2):
+		print(alldata[i]['url'])
+		res2=cr.crawling(alldata[i]['url'])
+		#print(res2)
+		print(type(word_tokenize(res2)))
+		for sw in stopwords.words("english"):
+			swlist.append(sw)
+		tokenized2 = word_tokenize(res2)
+		
+
+		for w in tokenized2:
+			if w not in swlist:
+				result2.append(w)
+		CosineSimilarity()
+		
+		
+	#print("______________________________________")
+	
+	
+	
+	
+	
+
+	
