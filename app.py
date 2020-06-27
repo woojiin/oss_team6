@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-# from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch
 
 import crawling as cr
 
@@ -7,7 +7,7 @@ es_host = "127.0.0.1"
 es_port = "9200"
 
 app = Flask(__name__)
-# es = Elasticsearch([{'host': es_host, 'port': es_port}], timeout=30)
+es = Elasticsearch([{'host': es_host, 'port': es_port}], timeout=30)
 
 @app.route("/")
 def index():

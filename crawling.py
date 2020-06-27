@@ -23,6 +23,7 @@ line1 = ""
 line2 = ""
 word_d ={}
 sent_list = []
+result1 = []
 
 def crawling(url):
 	#es = Elasticsearch([{'host': es_host, 'port':es_port}], timeout= 30)
@@ -71,7 +72,7 @@ def main(url):
 		swlist.append(sw)
 	tokenized1 = word_tokenize(res1)
 	
-	result1 = []
+	
 
 	for w in tokenized1:
 		if w not in swlist:
@@ -79,9 +80,9 @@ def main(url):
 
 	print(result1)
 	
-if __name__ == '__main__':
-	url = "https://en.wikipedia.org/wiki/Web_crawler"
-	main(url)
+#if __name__ == '__main__':
+	#url = "https://en.wikipedia.org/wiki/Web_crawler"
+	#main(url)
 
 	
 
