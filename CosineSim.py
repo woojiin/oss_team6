@@ -11,7 +11,8 @@ nltk.download('stopwords')
 from bs4 import BeautifulSoup
 from flask import Flask, render_template
 from elasticsearch import Elasticsearch
-from nltk import word_tokenize
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
 
 ee_host = "127.0.0.1"
 ee_port = "9200"
@@ -89,15 +90,39 @@ if __name__ == '__main__':
 	url2 = "http://arrow.apache.org/"
 	res1 = crawling(url1)
 	res2 = crawling(url2)
+	swlist = []
+	for sw in stopwords.words("english"):
+		swlist.append(sw)
+	tokenized1 = word_tokenize(res1)
+	tokenized2 = word_tokenize(res2)
+
+	result1 = []
+	result2 = []
+	
+	for w in tokenized1:
+		if w not in swlist:
+			result1.append(w)
+
+	for w in tokenized2:
+		if w not in swlist:
+			result2.append(w)
+
+	#print(len(tokenized))
+	#print(len(result))
+	
+	
+
+	res1 = ' '.join(result1)
+	res2 = ' '.join(result2)
 	#print(res1)
 	#print(res2)
 	process_new_sentence(res1)
 	process_new_sentence(res2)
 
-	#print(sent_list[0])
-	#print(make_vector(0))
-	#print(sent_list[1])
-	#print(make_vector(1))
+	##print(sent_list[0])
+	##print(make_vector(0))
+	##print(sent_list[1])
+	##print(make_vector(1))
 
 	v1 = make_vector(0)
 	v2 = make_vector(1)
