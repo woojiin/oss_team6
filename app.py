@@ -9,20 +9,31 @@ es_port = "9200"
 app = Flask(__name__)
 es = Elasticsearch([{'host': es_host, 'port': es_port}], timeout=30)
 
+data_list = {}
+count = 0
+
 @app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template('index.html', data_list=data_list)
 
 @app.route('/insert_data', methods=['POST'])
 def insert_data():
     error = None
-    if request.method == 'POST':
-        data_list = {}
-        count = 0
+    if request.method == 'POST':	
+
         inuk = 1
 
+        global count
         # url 받아오기 
         url = request.form['url']
+        if url == "":
+           inuk = 2
+           return render_template("index.html", data_list=data_list, inuk=inuk)
+        if count != 0:
+            for key in data_list:
+                if data_list[key]["url"] == url:
+                    inuk = 2
+                    return render_template("index.html", data_list=data_list, inuk=inuk)
 
         # 크롤링
         cr.main(url)
@@ -33,30 +44,11 @@ def insert_data():
         data["time"] = 0
         data["count"] = len(cr.result1)
         data["words"] = cr.result1
-        data["flag"] = 1
+        data["flag"] = url
+        data_list[count] = data
+        count = count + 1
         res = es.index(index='word', doc_type='url_Data', body=data)
-
-        # 엘라스틱 서치에서 모든 URL을 읽어와서 data_list에 담기
-        temp = {}
-        query = {"query": {"bool": {"must":[{"match": {"flag": 1}}]}}}
-        docs = es.search(index= 'word', body = query, size = 10)
-        if docs['hits']['total']['value']>0:
-            for doc in docs['hits']['hits']:
-                temp["url"] = doc['_source']['url']
-                temp["time"] = doc['_source']['time']
-                temp["count"] = doc['_source']['count']
-                temp["words"] = doc['_source']['words']
-                data_list[count] = temp
-                count = count + 1
-
-        #print(data_list)
-        for key in data_list:
-            print(key)
-            print(data_list[key])
-            if data_list[key]["url"] == url:
-                inuk = 2
-                return render_template("index.html", data_list=data_list, inuk=inuk)
-
+                
         return render_template('index.html', data_list=data_list, inuk=inuk)
 
 # @app.route('/words_func', methods=['POST'])
@@ -64,7 +56,8 @@ def insert_data():
 #     error = None
 #     if request.method == "POST":
 
-# @app.route('/cosine_func', methods=['POST'])
-# def cosine_func():
-#     error = None
-#     if request.method == "POST":
+@app.route('/cosine_func', methods=['POST'])
+def cosine_func():
+    error = None
+    if request.method == "POST":
+        url = request.form['cosurl']
