@@ -50,9 +50,11 @@ def make_vector(i):
 	return v
 
 if __name__ == '__main__':
+	es = Elasticsearch([{'host': es_host, 'port':es_port}], timeout= 30)
 
 	url1 = "http://arrow.apache.org/"
 	url2 = "http://arrow.apache.org/"
+	
 	
 	res1 = cr.crawling(url1)
 	res2 = cr.crawling(url2)
@@ -85,17 +87,19 @@ if __name__ == '__main__':
 	dotpro = numpy.dot(v1,v2)
 	cossimil = dotpro/float(numpy.linalg.norm(v1)*numpy.linalg.norm(v2))
 
-	#es = Elasticsearch([{'host': es_host, 'port':es_port}], timeout= 30)
+	
 	#e1 = {
 	#	"url" : 
 	#	"crawling data" :
 	#	"time":
 	#	"Cosine Similarity":
-	#}
+	#
 	#res= es.index(index = 'CosineSimilarity', doc_type = 'data', body = e1)
 	
 
 	print("dotproduct = ",dotpro)
 	print("Cosine Similarity = ", cossimil)
+
+	#fail / success
 
 
