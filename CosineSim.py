@@ -6,6 +6,12 @@ import re
 import requests
 import nltk
 import numpy
+<<<<<<< HEAD
+=======
+import crawling
+
+
+>>>>>>> ac1c9b6ab78c2389c66e692a5c7116a3cae7b7d8
 nltk.download('punkt')
 nltk.download('stopwords')
 from bs4 import BeautifulSoup
@@ -13,6 +19,7 @@ from flask import Flask, render_template
 from elasticsearch import Elasticsearch
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+import crawling as cr
 
 ee_host = "127.0.0.1"
 ee_port = "9200"
@@ -22,6 +29,7 @@ l = ""
 line1 = ""
 line2 = ""
 word_d ={}
+<<<<<<< HEAD
 sent_list = []
 
 
@@ -62,6 +70,9 @@ def crawling(url):
 	return line1
 	
 	
+=======
+sent_list = []	
+>>>>>>> ac1c9b6ab78c2389c66e692a5c7116a3cae7b7d8
 	
 
 def process_new_sentence(s):
@@ -88,8 +99,14 @@ if __name__ == '__main__':
 
 	url1 = "http://arrow.apache.org/"
 	url2 = "http://arrow.apache.org/"
+<<<<<<< HEAD
 	res1 = crawling(url1)
 	res2 = crawling(url2)
+=======
+	
+	res1 = cr.crawling(url1)
+	res2 = cr.crawling(url2)
+>>>>>>> ac1c9b6ab78c2389c66e692a5c7116a3cae7b7d8
 	swlist = []
 	for sw in stopwords.words("english"):
 		swlist.append(sw)
@@ -107,6 +124,7 @@ if __name__ == '__main__':
 		if w not in swlist:
 			result2.append(w)
 
+<<<<<<< HEAD
 	
 
 	#print(len(tokenized))
@@ -120,17 +138,16 @@ if __name__ == '__main__':
 
 	#print(res1)
 	#print(res2)
+=======
+	res1 = ' '.join(result1)
+	res2 = ' '.join(result2)
+
+>>>>>>> ac1c9b6ab78c2389c66e692a5c7116a3cae7b7d8
 	process_new_sentence(res1)
 	process_new_sentence(res2)
 
-	##print(sent_list[0])
-	##print(make_vector(0))
-	##print(sent_list[1])
-	##print(make_vector(1))
-
 	v1 = make_vector(0)
 	v2 = make_vector(1)
-
 	
 	dotpro = numpy.dot(v1,v2)
 	cossimil = dotpro/float(numpy.linalg.norm(v1)*numpy.linalg.norm(v2))
