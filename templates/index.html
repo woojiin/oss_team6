@@ -43,10 +43,10 @@
                                 {% set thisurl = data %}
                             {% endif %}
                             <td>{{ data }}</td>
-                            <td><form method="POST" action="/words_func"><input name="wordurl" type="hidden" value={{ thisurl }}><input type=submit value="단어 분석"></form></td>
-                            <td><form method="POST" action="/cosine_func"><input name="cosurl" type="hidden" value={{ thisurl }}><input type=submit value="유사도 분석"></form></td></td>
                         {% endif %}
                     {% endfor %}
+                    <td><form method="POST" action="/words_func"><input name="wordurl" type="hidden" value={{ thisurl }}><input type=submit value="단어 분석"></form></td>
+                    <td><form method="POST" action="/cosine_func"><input name="cosurl" type="hidden" value={{ thisurl }}><input type=submit value="유사도 분석"></form></td></td>
                 </tr>
                 {% endfor %}
         </div>
