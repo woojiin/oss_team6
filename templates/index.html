@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>OSP team 6</title>
+    </head>
+    <body>
+        <h1>welcome</h1>
+        <form method="POST" action="/insert_data">
+            URL <input name="url" type="text"><br>
+            <button type="submit"> Submit </button>
+        </form>
+        <hr>
+        <h1>Result</h1>
+        <h3>URL : {{url}} </h3>
+        <form method="POST" action="/words_func"><input type=submit value="단어 분석">
+
+        <div id="tablediv" style="width : 1025px;"> 표</div>
+    </body>
+</html>
