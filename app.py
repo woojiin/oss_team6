@@ -19,12 +19,16 @@ def index():
 @app.route('/insert_data', methods=['POST'])
 def insert_data():
     error = None
-    if request.method == 'POST':
+    if request.method == 'POST':	
+
         inuk = 1
 
         global count
         # url 받아오기 
         url = request.form['url']
+        if url == "":
+           inuk = 2
+           return render_template("index.html", data_list=data_list, inuk=inuk)
         if count != 0:
             for key in data_list:
                 if data_list[key]["url"] == url:
