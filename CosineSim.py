@@ -73,26 +73,14 @@ if __name__ == '__main__':
 		if w not in swlist:
 			result2.append(w)
 
-	#print(len(tokenized))
-	#print(len(result))
-	
-	
-
 	res1 = ' '.join(result1)
 	res2 = ' '.join(result2)
-	#print(res1)
-	#print(res2)
+
 	process_new_sentence(res1)
 	process_new_sentence(res2)
 
-	##print(sent_list[0])
-	##print(make_vector(0))
-	##print(sent_list[1])
-	##print(make_vector(1))
-
 	v1 = make_vector(0)
 	v2 = make_vector(1)
-
 	
 	dotpro = numpy.dot(v1,v2)
 	cossimil = dotpro/float(numpy.linalg.norm(v1)*numpy.linalg.norm(v2))
