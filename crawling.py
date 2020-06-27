@@ -58,11 +58,13 @@ def crawling(url):
 			line1 += ''
 		else:
 			line1 += ' '
-	return line1
+	return line1.lower()
 
-if __name__ == '__main__':
-	url1 = "https://en.wikipedia.org/wiki/Web_crawler"
+def main(url):
+	url1 = url
+	
 	res1 = crawling(url1)
+	
 	swlist = []
 
 	for sw in stopwords.words("english"):
@@ -77,6 +79,9 @@ if __name__ == '__main__':
 
 	print(result1)
 	
+if __name__ == '__main__':
+	url = "https://en.wikipedia.org/wiki/Web_crawler"
+	main(url)
 
 	
 

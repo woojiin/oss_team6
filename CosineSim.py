@@ -6,6 +6,8 @@ import re
 import requests
 import nltk
 import numpy
+import crawling
+
 
 nltk.download('punkt')
 nltk.download('stopwords')
@@ -14,6 +16,7 @@ from flask import Flask, render_template
 from elasticsearch import Elasticsearch
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+import crawling as cr
 
 es_host = "127.0.0.1"
 es_port = "9200"
@@ -23,46 +26,7 @@ l = ""
 line1 = ""
 line2 = ""
 word_d ={}
-sent_list = []
-
-
-def crawling(url):
-	es = Elasticsearch([{'host': es_host, 'port':es_port}], timeout= 30)
-	request = requests.get(url)
-
-	soup = BeautifulSoup(request.content, 'html.parser')
-	body = soup.find_all('body')[0].get_text()
-	global l
-	global line1
-	
-
-	for w in body:
-		l += w
-
-	temp1 = l.split()
-
-	for w in temp1:
-		w = re.sub('[^\w\s]+', ' ', w)
-		temp2.append(w)
-	
-	temp1 = []
-
-	for w in temp2:
-		w = re.sub('[^A-Za-z]+', ' ', w)
-		temp1.append(w)
-	while ' ' in temp1:
-		temp1.remove(' ')
-	
-
-	for w in temp1:
-		line1 += w
-		if w[len(w)-1] == ' ':
-			line1 += ''
-		else:
-			line1 += ' '
-	return line1
-	
-	
+sent_list = []	
 	
 
 def process_new_sentence(s):
@@ -90,8 +54,8 @@ if __name__ == '__main__':
 	url1 = "http://arrow.apache.org/"
 	url2 = "http://arrow.apache.org/"
 	
-	res1 = crawling(url1)
-	res2 = crawling(url2)
+	res1 = cr.crawling(url1)
+	res2 = cr.crawling(url2)
 	swlist = []
 	for sw in stopwords.words("english"):
 		swlist.append(sw)
