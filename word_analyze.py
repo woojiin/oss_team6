@@ -97,8 +97,8 @@ if __name__=='__main__':
 		    tf_idf[key]=tf_idf[key]*idf_d[key]
 		
 		d=Counter(tf_idf)
-		d.most_common()
-		print(type(d))
+#		d.most_common()
+#		print(type(d))
 		#print(d.most_common(10))
 		for k, v in d.most_common(10):
 			print (k)
