@@ -5,7 +5,7 @@
     </head>
     <body>
         <script type = 'text/javascript' src = "{{url_for('static', filename='table.js') }}"></script>
-        <script>var _data = {{ data_list|tojson }}; </script>
+
         <h1>welcome</h1>
         <form method="POST" action="/insert_data">
             URL <input name="url" type="text"><br>
@@ -17,7 +17,6 @@
         </form>
         {% if inuk == 1 %}
             <span>success</span>
-            <script type="text/javascript">drawTable()</script>
         {% elif inuk == 2 %}
             <span>fail</span>
         {% else %}
@@ -27,22 +26,24 @@
         <h1>Result</h1>
         <h3>URL : {{url}} </h3>
 
-        <div id="tablediv" border="1" style="width : 1025px;">
-            <table>
+        <div id="tablediv" style="width : 1025px;">
+            <table border="1">
                 <tr>
                     <td>url</td>
-                    <td>전체 단어 단어 수</td>
-                    <td>처리시간</td>
+                    <td>처리 시간</td>
+                    <td>전체 단어 수</td>
                     <td>단어 분석</td>
                     <td>유사도 분석</td>
                 </tr>
-                {% for key in data_list %}
+                {% for key, value in data_list.items() %}
                 <tr>
-                    <td>{{ key.url }}</td>
-                    <td>{{ data_list[key][count] }}</td>
-                    <td>{{ data_list[key][time] }}</td>
-                    <td><form method="POST" action="/words_func"><input type="hidden" value={{ data[key][url] }}><input type=submit value="단어 분석"></form></td>
-                    <td><form method="POST" action="/cosine_func"><input type="hidden" value={{ data[key][url] }}><input type=submit value="유사도 분석"></form></td></td>
+                    {% for index, data in value.items() %}
+                        {% if index != "words" and index != "flag" %}
+                            <td>{{ data }}</td>
+                        {% endif %}
+                    {% endfor %}
+                    <td><form method="POST" action="/words_func"><input type="hidden" value={{ value }}><input type=submit value="단어 분석"></form></td>
+                    <td><form method="POST" action="/cosine_func"><input type="hidden" value={{ value }}><input type=submit value="유사도 분석"></form></td></td>
                 </tr>
                 {% endfor %}
         </div>
