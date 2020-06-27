@@ -28,6 +28,9 @@ result2 =[]
 alldata = {}
 swlist = []
 count =0
+cosim = {}
+cosimcnt=0
+totalcosim = {}
 	
 def process_new_sentence(s):
 	sent_list.append(s)
@@ -49,7 +52,8 @@ def make_vector(i):
 		v.append(val)
 	return v
 
-def CosineSimilarity():
+def CosineSimilarity(url):
+	global cosimcnt
 	res1 = ' '.join(result1)
 	res2 = ' '.join(result2)
 
@@ -61,14 +65,17 @@ def CosineSimilarity():
 
 	dotpro = numpy.dot(v1,v2)
 	cossimil = dotpro/float(numpy.linalg.norm(v1)*numpy.linalg.norm(v2))
+	cosim['urls']= url
+	cosim['res'] = cossimil
+	totalcosim[cosimcnt] = cosim
+	cosimcnt = cosimcnt+1
 	
 	print("dotproduct = ",dotpro)
 	print("Cosine Similarity = ", cossimil)
 
-
-
-if __name__ == '__main__':
-	url1 = "https://xmlgraphics.apache.org/"
+def main(url):
+	global count
+	url1 = url	#받아와야함
 	es = Elasticsearch([{'host': es_host, 'port':es_port}], timeout= 30)
 	
 
@@ -97,11 +104,11 @@ if __name__ == '__main__':
 			#print(alldata[count])
 			count = count + 1
 			
-	for i in range(0,2):
+	for i in range(0,count):
 		print(alldata[i]['url'])
 		res2=cr.crawling(alldata[i]['url'])
 		#print(res2)
-		print(type(word_tokenize(res2)))
+		#print(type(word_tokenize(res2)))
 		for sw in stopwords.words("english"):
 			swlist.append(sw)
 		tokenized2 = word_tokenize(res2)
@@ -110,9 +117,17 @@ if __name__ == '__main__':
 		for w in tokenized2:
 			if w not in swlist:
 				result2.append(w)
-		CosineSimilarity()
+		CosineSimilarity(alldata[i]['url'])
+	print(totalcosim)
+
+	return totalcosim
 		
 		
+
+
+
+if __name__ == '__main__':
+	#main(url)
 	#print("______________________________________")
 	
 	
