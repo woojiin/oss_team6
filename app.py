@@ -11,6 +11,7 @@ es = Elasticsearch([{'host': es_host, 'port': es_port}], timeout=30)
 
 data_list = {}
 count = 0
+inuk = 1
 
 @app.route("/")
 def index():
@@ -21,9 +22,8 @@ def insert_data():
     error = None
     if request.method == 'POST':	
 
-        inuk = 1
-
         global count
+        global inuk
         # url 받아오기 
         url = request.form['url']
         if url == "":
@@ -61,3 +61,4 @@ def cosine_func():
     error = None
     if request.method == "POST":
         url = request.form['cosurl']
+        return render_template('index.html', data_list=data_list, inuk=inuk)
