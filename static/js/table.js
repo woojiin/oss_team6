@@ -1,4 +1,4 @@
-function drawTable(_data) {
+function drawTable() {
     var HTML = "<table border=1 width=1000>";
     HTML += "<tr>";
     HTML += "<td>구분</td>";
@@ -21,8 +21,8 @@ function drawTable(_data) {
     for(var temp in _data)   { 
       HTML += "<tr>";
       HTML += "<td>" + i+1 + "</td>";
-      HTML += "<td>" + temp[i]["url"] + "</td>";
-      HTML += "<td>" + temp[i]["time"] + "</td>";
+      HTML += "<td>" + _data[temp]["url"] + "</td>";
+      HTML += "<td>" + _data[temp]["time"] + "</td>";
       HTML += "<td>" + "<form method="POST" action="/words_func"><input type=submit value="단어 분석"></form>" + "</td>";
       HTML += "<td>" + "<form method="POST" action="/cosine_func"><input type=submit value="유사도 분석"></form>" + "</td>";
       HTML += "</tr>" ;

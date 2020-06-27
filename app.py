@@ -19,6 +19,7 @@ def insert_data():
     if request.method == 'POST':
         data_list = {}
         count = 0
+        inuk = 1
 
         # url 받아오기 
         url = request.form['url']
@@ -48,9 +49,15 @@ def insert_data():
                 data_list[count] = temp
                 count = count + 1
 
-        print(data_list)
+        #print(data_list)
+        for key in data_list:
+            print(key)
+            print(data_list[key])
+            if data_list[key]["url"] == url:
+                inuk = 2
+                return render_template("index.html", data_list=data_list, inuk=inuk)
 
-        return render_template('index.html', data_list=data_list)
+        return render_template('index.html', data_list=data_list, inuk=inuk)
 
 # @app.route('/words_func', methods=['POST'])
 # def words_func():

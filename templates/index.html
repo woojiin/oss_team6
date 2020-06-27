@@ -4,16 +4,47 @@
         <title>OSP team 6</title>
     </head>
     <body>
+        <script type = 'text/javascript' src = "{{url_for('static', filename='table.js') }}"></script>
+        <script>var _data = {{ data_list|tojson }}; </script>
         <h1>welcome</h1>
         <form method="POST" action="/insert_data">
             URL <input name="url" type="text"><br>
             <button type="submit"> Submit </button>
         </form>
+
+        <form method="POST" action="/insert_data_file">
+            <input type="file" name="filename">
+        </form>
+        {% if inuk == 1 %}
+            <span>success</span>
+            <script type="text/javascript">drawTable()</script>
+        {% elif inuk == 2 %}
+            <span>fail</span>
+        {% else %}
+            <span>...</span>
+	{% endif %}
         <hr>
         <h1>Result</h1>
         <h3>URL : {{url}} </h3>
-        <form method="POST" action="/words_func"><input type=submit value="단어 분석">
 
-        <div id="tablediv" style="width : 1025px;"> 표</div>
+        <div id="tablediv" border="1" style="width : 1025px;">
+            <table>
+                <tr>
+                    <td>url</td>
+                    <td>전체 단어 단어 수</td>
+                    <td>처리시간</td>
+                    <td>단어 분석</td>
+                    <td>유사도 분석</td>
+                </tr>
+                {% for key in data_list %}
+                <tr>
+                    <td>{{ key.url }}</td>
+                    <td>{{ data_list[key][count] }}</td>
+                    <td>{{ data_list[key][time] }}</td>
+                    <td><form method="POST" action="/words_func"><input type="hidden" value={{ data[key][url] }}><input type=submit value="단어 분석"></form></td>
+                    <td><form method="POST" action="/cosine_func"><input type="hidden" value={{ data[key][url] }}><input type=submit value="유사도 분석"></form></td></td>
+                </tr>
+                {% endfor %}
+        </div>
     </body>
 </html>
