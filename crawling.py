@@ -78,7 +78,7 @@ def main(url):
 		if w not in swlist:
 			result1.append(w)
 
-	print(result1)
+	# print(result1)
 	
 #if __name__ == '__main__':
 	#url = "https://en.wikipedia.org/wiki/Web_crawler"
