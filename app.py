@@ -38,6 +38,7 @@ def insert_data():
         # 엘라스틱 서치에서 모든 URL을 읽어와서 data_list에 담기
         temp = {}
         query = {"query": {"bool": {"must":[{"match": {"flag": 1}}]}}}
+        docs = es.search(index= 'word', body = query, size = 10)
         if docs['hits']['total']['value']>0:
             for doc in docs['hits']['hits']:
                 temp["url"] = doc['_source']['url']
@@ -45,7 +46,7 @@ def insert_data():
                 temp["count"] = doc['_source']['count']
                 temp["words"] = doc['_source']['words']
                 data_list[count] = temp
-                    count = count + 1
+                count = count + 1
 
         print(data_list)
 
