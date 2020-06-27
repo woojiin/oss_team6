@@ -56,7 +56,8 @@ def insert_data():
 #     error = None
 #     if request.method == "POST":
 
-# @app.route('/cosine_func', methods=['POST'])
-# def cosine_func():
-#     error = None
-#     if request.method == "POST":
+@app.route('/cosine_func', methods=['POST'])
+def cosine_func():
+    error = None
+    if request.method == "POST":
+        url = request.form['cosurl']
