@@ -6,6 +6,7 @@ import re
 import requests
 import nltk
 import numpy
+
 nltk.download('punkt')
 nltk.download('stopwords')
 from bs4 import BeautifulSoup
@@ -14,8 +15,8 @@ from elasticsearch import Elasticsearch
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
-ee_host = "127.0.0.1"
-ee_port = "9200"
+es_host = "127.0.0.1"
+es_port = "9200"
 temp1 = []
 temp2 = []
 l = ""
@@ -26,7 +27,7 @@ sent_list = []
 
 
 def crawling(url):
-	es = Elasticsearch([{'host': ee_host, 'port':ee_port}], timeout= 30)
+	es = Elasticsearch([{'host': es_host, 'port':es_port}], timeout= 30)
 	request = requests.get(url)
 
 	soup = BeautifulSoup(request.content, 'html.parser')
@@ -88,6 +89,7 @@ if __name__ == '__main__':
 
 	url1 = "http://arrow.apache.org/"
 	url2 = "http://arrow.apache.org/"
+	
 	res1 = crawling(url1)
 	res2 = crawling(url2)
 	swlist = []
@@ -130,6 +132,16 @@ if __name__ == '__main__':
 	
 	dotpro = numpy.dot(v1,v2)
 	cossimil = dotpro/float(numpy.linalg.norm(v1)*numpy.linalg.norm(v2))
+
+	#es = Elasticsearch([{'host': es_host, 'port':es_port}], timeout= 30)
+	#e1 = {
+	#	"url" : 
+	#	"crawling data" :
+	#	"time":
+	#	"Cosine Similarity":
+	#}
+	#res= es.index(index = 'CosineSimilarity', doc_type = 'data', body = e1)
+	
 
 	print("dotproduct = ",dotpro)
 	print("Cosine Similarity = ", cossimil)
