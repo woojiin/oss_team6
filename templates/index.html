@@ -2,6 +2,9 @@
 <html>
     <head>
         <title>OSP team 6</title>
+	<script language = "javascript">
+	function showPopup() { window.open{"word_analyze_result.html", "a", "width=400, height =400, left = 100, top=50");}
+	</script>
     </head>
     <body>
         <script type = 'text/javascript' src = "{{url_for('static', filename='table.js') }}"></script>
@@ -45,8 +48,8 @@
                             <td>{{ data }}</td>
                         {% endif %}
                     {% endfor %}
-                    <td><form method="POST" action="/words_func"><input name="wordurl" type="hidden" value={{ thisurl }}><input type=submit value="단어 분석"></form></td>
-                    <td><form method="POST" action="/cosine_func"><input name="cosurl" type="hidden" value={{ thisurl }}><input type=submit value="유사도 분석"></form></td></td>
+                    <td><form method="POST" action="/words_func"><input name="wordurl" type="hidden" value={{ thisurl }}><input type=submit value="단어 분석" onclick = "showPopup(); return false;"></form></td>
+                    <td><form method="POST" action="/cosine_func"><input name="cosurl" type="hidden" value={{ thisurl }}><input type=submit value="유사도 분석" onclick = "showPopup(); return false;"></form></td></td>
                 </tr>
                 {% endfor %}
         </div>
