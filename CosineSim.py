@@ -16,22 +16,23 @@ from nltk.tokenize import word_tokenize
 import crawling as cr
 es_host = "127.0.0.1"
 es_port = "9200"
-temp1 = []
-temp2 = []
-l = ""
-line1 = ""
-line2 = ""
+
 word_d ={}
 sent_list = []	
 result1 = []
 result2 =[]
-alldata = {}
+
 swlist = []
-count =0
+
 cosim = {}
 cosimcnt=0
-totalcosim = {}
-	
+totalcosim = []
+listurlword=""
+sortlist=[]
+top3dic={}
+
+
+
 def process_new_sentence(s):
 	sent_list.append(s)
 	tokenized = word_tokenize(s)
@@ -52,11 +53,13 @@ def make_vector(i):
 		v.append(val)
 	return v
 
-def CosineSimilarity(url):
+def CosineSimilarity(inputurl):
+	
 	global cosimcnt
+	global sent_list
 	res1 = ' '.join(result1)
 	res2 = ' '.join(result2)
-
+	sent_list=[]
 	process_new_sentence(res1)
 	process_new_sentence(res2)
 
@@ -65,21 +68,35 @@ def CosineSimilarity(url):
 
 	dotpro = numpy.dot(v1,v2)
 	cossimil = dotpro/float(numpy.linalg.norm(v1)*numpy.linalg.norm(v2))
-	cosim['urls']= url
+	cosim = {}
+	cosim['urls']= inputurl
 	cosim['res'] = cossimil
-	totalcosim[cosimcnt] = cosim
+	totalcosim.append(cosim)
 	cosimcnt = cosimcnt+1
 	
-	print("dotproduct = ",dotpro)
-	print("Cosine Similarity = ", cossimil)
+	#print("dotproduct = ",dotpro)
+	#print("Cosine Similarity = ", cossimil)
+	#print('')
+	#rr= sorted(totalcosim, key=(lambda x: x['res']))
+	
+	
+
+#def Returntop10(url):
+	
 
 def main(url):
-	global count
+
+	global result1
+	global result2
+	global sent_list
+	global sortlist
+	
 	url1 = url	#받아와야함
+	
 	es = Elasticsearch([{'host': es_host, 'port':es_port}], timeout= 30)
 	
 
-	#버튼 눌린 url크롤링하기
+	#버튼 눌린 url크롤링하기 -> stopwords제거
 	res1 = cr.crawling(url1)
 	swlist = []
 	for sw in stopwords.words("english"):
@@ -89,48 +106,55 @@ def main(url):
 	for w in tokenized1:
 		if w not in swlist:
 			result1.append(w)
-
 	
-
+	
 	 # 엘라스틱 서치에서 모든 URL을 읽어와서 alldata에 담기
 	temp = {}
 	query = {"query": {"bool": {"must":[{"match": {"flag": 1}}]}}}
 	docs = es.search(index= 'word', body = query, size = 10)
+
 	if docs['hits']['total']['value']>0:	
-		for doc in docs['hits']['hits']:	
-			temp["url"] = doc['_source']['url']
-			temp["words"] = doc['_source']['words']
-			alldata[count] = temp
-			#print(alldata[count])
-			count = count + 1
-			
-	for i in range(0,count):
-		print(alldata[i]['url'])
-		res2=cr.crawling(alldata[i]['url'])
-		#print(res2)
-		#print(type(word_tokenize(res2)))
-		for sw in stopwords.words("english"):
-			swlist.append(sw)
-		tokenized2 = word_tokenize(res2)
-		
+		for doc in docs['hits']['hits']:
+			listurlword = ' '.join(doc['_source']['words'])
+			result2 = []
+			tokenized1 = word_tokenize(listurlword)
 
-		for w in tokenized2:
-			if w not in swlist:
-				result2.append(w)
-		CosineSimilarity(alldata[i]['url'])
-	print(totalcosim)
-
-	return totalcosim
-		
-		
+			for w in tokenized1:
+				if w not in swlist:
+					result2.append(w)
+			CosineSimilarity(doc['_source']['url'])
+	key=[]
+	sortlist= sorted(totalcosim, key=(lambda x: x['res']))
+	#print(type(sortlist))
+	reverselist=list(reversed(sortlist))
+	#print(reverselist)
+	
+	top3dic = dict(zip(range(len(reverselist)), reverselist))
+	
+	for i in range(len(sortlist)):
+		if i>2:
+			del(top3dic[i])
+	
+	
+	#print(top3dic)
+	
 
 
-
-if __name__ == '__main__':
+#if __name__ == '__main__':
+	#url = "http://climate.apache.org/"
 	#main(url)
 	#print("______________________________________")
-	
-	
+
+
+#https://ofbiz.apache.org/
+#https://accumulo.apache.org/
+#https://calcite.apache.org/
+#http://river.apache.org/
+#http://ws.apache.org/
+#http://oodt.apache.org/
+#http://climate.apache.org/
+
+
 	
 	
 	
