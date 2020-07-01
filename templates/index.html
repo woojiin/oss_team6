@@ -11,20 +11,16 @@
 
         <h1>welcome</h1>
         <form method="POST" action="/insert_data">
-            URL <input name="url" type="text" vallue="type the url"><br>
+            URL <input name="url" type="text"><br>
             <button type="submit"> Submit </button>
         </form>
 
-        <form method="POST" action="/insert_data_file">
-            <input type="file" name="filename">
+        <form method="POST" action="/insert_file" enctype="multipart/form-data">
+            <input name="file1" type="file" name="filename">
+            <input type="submit">
         </form>
-        {% if inuk == 1 %}
-            <span>success</span>
-        {% elif inuk == 2 %}
-            <span>fail</span>
-        {% else %}
-            <span>...</span>
-	{% endif %}
+        <span>{{ state }}</span>
+
         <hr>
         <h1>Result</h1>
         <h3>URL : {{url}} </h3>
