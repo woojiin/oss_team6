@@ -48,7 +48,16 @@ def insert_data():
         data_list[count] = data
         count = count + 1
         cr.result1 = []
+        cr.temp1 = []
+        cr.temp2 = []
+        cr.l = ""
+        cr.line1 = ""
+        cr.line2 = ""
+        cr.word_d = {}
+        cr.sent_list = []
         res = es.index(index='word', doc_type='url_Data', body=data)
+
+        print(data_list)
                 
         return render_template('index.html', data_list=data_list, inuk=inuk)
 
