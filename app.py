@@ -44,7 +44,7 @@ def insert_data():
         data["time"] = 0
         data["count"] = len(cr.result1)
         data["words"] = cr.result1
-        data["flag"] = url
+        data["flag"] = 1
         data_list[count] = data
         count = count + 1
         res = es.index(index='word', doc_type='url_Data', body=data)
