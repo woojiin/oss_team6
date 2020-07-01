@@ -47,6 +47,7 @@ def insert_data():
         data["flag"] = 1
         data_list[count] = data
         count = count + 1
+        cr.result1 = []
         res = es.index(index='word', doc_type='url_Data', body=data)
                 
         return render_template('index.html', data_list=data_list, inuk=inuk)
