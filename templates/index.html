@@ -17,7 +17,7 @@
 
         <form method="POST" action="/insert_file" enctype="multipart/form-data">
             <input name="file1" type="file" name="filename">
-            <input type="submit">
+            <input type="submit" value="Submit">
         </form>
         <span>{{ state }}</span>
 
@@ -36,6 +36,7 @@
                 </tr>
                 {% for key, value in data_list.items() %}
                 <tr>
+                    {% set thisurl = "" %}
                     {% for index, data in value.items() %}
                         {% if index != "words" and index != "flag" %}
                             {% if index == url %}
