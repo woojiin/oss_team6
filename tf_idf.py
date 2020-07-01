@@ -1,29 +1,38 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
-
+import sys
 import re
 import requests
-from bs4 import BeautifulSoup
+import nltk
+import numpy
+import crawling
 import math
-from nltk import word_tokenize
-from collections import Counter
+
+nltk.download('punkt')
+nltk.download('stopwords')
+from bs4 import BeautifulSoup
+from flask import Flask, render_template
 from elasticsearch import Elasticsearch
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-#from tkinter import *
-#from tkinter import messagebox
 import crawling as cr
-
 es_host = "127.0.0.1"
 es_port = "9200"
-word_d={}
-sent_list=[]
-tflist = []
-sortedlist = []
-cnt  =0
-count =0
-alldata = {}
+
+count=0
+
+word_d = {}
+sent_list = []
+
+result1 = []
+result2 =[]
+
 swlist = []
+stringres1 = ""
+stringres2 =""
+totaltfidf = []
+top3dic={}
+
 
 
 def process_new_sentence(s):
@@ -46,11 +55,10 @@ def compute_tf(s):
 		bow.add(tok)
 
 	tf_d = {}
-	for word, cnt in wordcount_d.items():
-		tf_d[word]=float(cnt)/len(bow)
-	#print(tf_d)
-
+	for word, count in wordcount_d.items():
+		tf_d[word]=float(count)/len(bow)
 	return tf_d
+
 
 def compute_idf():
 	Dval = len(sent_list)
@@ -68,104 +76,91 @@ def compute_idf():
 		for s in sent_list:
 			if t in word_tokenize(s):
 				cnt +=1
-			idf_d[t] = float(math.log(float(Dval)/cnt))
-			#if cnt ==0:
-			#	continue;				
-				#print("나누기가 0")
+				idf_d[t] = float(math.log(float(Dval)/cnt))
+			
 			
 			
 	#print(idf_d)
 	return idf_d
 
-if __name__=='__main__':
-	result = []
-	url = u'http://abdera.apache.org/'
+def tfidf():
+	global count
+	global totaltfidf
+	global tdcnt
+	idf_d = compute_idf()
+	for i in range(0,len(sent_list)):
+		tf_d = compute_tf(sent_list[i])
+		
+		for word, tval in tf_d.items():
+			td = {}
+			td['word']= word
+			td['res'] = tval*idf_d[word]
+			totaltfidf.append(td)	
+
+	
+				
+
+def main(url):
+
+	global result1
+	global result2
+	global sent_list
+	global sortlist
+	global stringres2
+	
+	
+	url1 = url	#받아와야함
+	
 	es = Elasticsearch([{'host': es_host, 'port':es_port}], timeout= 30)
-
-	tags_body = cr.crawling(url)
 	
 
-	#tags_body = soup.find(id="content").get_text().lower()
-
-#	print(tags_body)
-	
-	
-	swlist=[]
+	#버튼 눌린 url크롤링하기 -> stopwords제거
+	res1 = cr.crawling(url1)
+	swlist = []
 	for sw in stopwords.words("english"):
 		swlist.append(sw)
-	sw_tokenized = word_tokenize(tags_body)
+	tokenized1 = word_tokenize(res1)
 
-	sw_result=[]
-	for w in sw_tokenized:
+	for w in tokenized1:
 		if w not in swlist:
-			sw_result.append(w)
-
-	str_result=' '.join(sw_result)
-
+			result1.append(w)
+	stringres1=' '.join(result1)
+	process_new_sentence(stringres1)
+	
+	
 	 # 엘라스틱 서치에서 모든 URL을 읽어와서 alldata에 담기
 	temp = {}
 	query = {"query": {"bool": {"must":[{"match": {"flag": 1}}]}}}
 	docs = es.search(index= 'word', body = query, size = 10)
+
 	if docs['hits']['total']['value']>0:	
 		for doc in docs['hits']['hits']:
-			#크롤링
-			cr_data = cr.crawling(doc['_source']['url'])
-			#프로세
-			process_new_sentence(cr_data)	
-			#temp["url"] = doc['_source']['url']
-			#temp["words"] = doc['_source']['words']
-			#alldata[count] = temp
-			#print(alldata[count])
-			#count = count + 1
+			listurlword = ' '.join(doc['_source']['words'])
+			result2 = []
+			tokenized1 = word_tokenize(listurlword)
 
-
-	process_new_sentence(str_result) #여기에 result를 넣어줘야
-	idf_d = compute_idf()
-	temp = {}
-	#sprint(idf_d)
-	for i in range(0, len(sent_list)):
-		tf_d = compute_tf(sent_list[i])
-		#print(tf_d)
-		for word, tfval in tf_d.items():	
-			print(word, tfval*idf_d[word])
-		#print(" ")
-			#print(key)
-			#print(value)
-			
-			#tfidf=value*idf_d[key]
-			#print(idf_d[key])
-			#print(tfidf)
-			#print()
-			#if key== 'copyright':
-			#	break
-			#temp["word"] = key
-			#temp["tfidf"] = tfidf
-			#alldata[count] = temp
-			#count = count+1
-			
-	#print(alldata)
-			
-		 
-
-	#print(tf_idf)
-	#print(len(sent_list))
+			for w in tokenized1:
+				if w not in swlist:
+					result2.append(w)
+			stringres2=' '.join(result2)
+			process_new_sentence(stringres2)
 	
-	#d=Counter(tf_idf)
-	#print(d)
-	#tflist = tf_idf.items()
-	#print(tflist)
-	#sortedlist = sorted(tflist, key = lambda x: x[1], reverse = True)
+	tfidf()
+	sortlist= sorted(totaltfidf, key=(lambda x: x['res']))
+	#print(type(sortlist))
+	reverselist=list(reversed(sortlist))
+	#print(reverselist)
 	
-	#for (k,v) in sortedlist:
-	#	if cnt>=10:	
-	#		break
-	#	print(k)
-		#print(v)
-		#print()
-	#	cnt +=1
+	top10dic = dict(zip(range(len(reverselist)), reverselist))
+	
+	for i in range(len(sortlist)):
+		if i>9:
+			del(top10dic[i])
+	#print(top10dic)
+	
+
+#if __name__ == '__main__':
+	#url = "http://climate.apache.org/"
+	#main(url)
+
 		
-		
-	#for k, v in d.most_common(10):	#가장 많이 나타난 10개
-	#	print(k)
-		
-	#print("    ")
