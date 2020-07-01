@@ -130,9 +130,10 @@ def main(url):
 	#print(reverselist)
 	
 	top3dic = dict(zip(range(len(reverselist)), reverselist))
+	del(top3dic[0])
 	
 	for i in range(len(sortlist)):
-		if i>2:
+		if i>3:
 			del(top3dic[i])
 	
 	
