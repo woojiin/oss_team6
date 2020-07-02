@@ -162,13 +162,13 @@ def words_func():
 
         for key in data_list:
             if (data_list[key]["url"] == this_url):
-                data_list[key]["time"] = cs.runtime
+                data_list[key]["time"] = tf.runtime
                 query = {"query": {"bool": {"must": [{"match": {"flag": 1}}]}}}
                 docs = es.search(index='word', body=query, size=10)
                 if docs['hits']['total']['value'] > 0:
                     for doc in docs['hits']['hits']:
                         if doc['_source']['url'] == this_url:
-                            doc['_source']['time'] = cs.runtime
+                            doc['_source']['time'] = tf.runtime
                             print(doc['_source']['time'])
                             break
               #  dt.processdata()

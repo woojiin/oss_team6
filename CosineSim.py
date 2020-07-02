@@ -143,7 +143,7 @@ def main(url):
 		if i>3:
 			del(top3dic[i])
 	runtime = time.time()-start
-	
+	runtime = round(runtime, 3)
 	
 	#print(top3dic)
 	

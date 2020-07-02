@@ -162,6 +162,7 @@ def main(url):
 		if i>9:
 			del(top10dic[i])
 	runtime = time.time()-start
+	runtime = round(runtime, 3)
 #	print(top10dic)
 	
 
