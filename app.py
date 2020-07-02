@@ -149,4 +149,4 @@ def cosine_func():
                             print(doc['_source']['time'])
                             break
                 return render_template('index.html', data_list=data_list, state=success2)
-        return render_template('index.html', data_list=data_list, state=success2)
+    return render_template('index.html', data_list=data_list, state=success2)
