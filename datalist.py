@@ -20,6 +20,7 @@ escount=0
 es = Elasticsearch([{'host': es_host, 'port': es_port}], timeout=30)
 
 def processdata():
+	print("processdata")
 	global escount
 	global esdata 
 	global esdata_list
@@ -29,21 +30,25 @@ def processdata():
 	temp = {}
 	query = {"query": {"bool": {"must":[{"match": {"flag": 1}}]}}}
 	docs = es.search(index= 'word', body = query, size = 10)
+	#print(docs)
 	#print(type(docs['hits']['total']['value']))
 	if docs['hits']['total']['value']>0:	
 		for doc in docs['hits']['hits']:
+			esdata = {}
+			print(doc['_source']['url'])
 			esdata["url"] = doc['_source']['url']
 			esdata["time"] = doc['_source']['time']
 			esdata["count"] = doc['_source']['count']
 			esdata["words"] = doc['_source']['words']
 			esdata["flag"] = doc['_source']['flag']
 			esdata_list[escount] = esdata
-			esdata = {}
+			#print(esdata)
 			#print(esdata)
 			#print("")
 			escount +=1
+			
 	
-	print(esdata_list)
+	#print(esdata_list)
 
 
 #if __name__ == '__main__':

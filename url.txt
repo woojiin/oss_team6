@@ -1,4 +1,3 @@
-https://ofbiz.apache.org/
 https://accumulo.apache.org/
 https://calcite.apache.org/
 http://river.apache.org/
