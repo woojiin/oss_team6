@@ -40,9 +40,12 @@ def insert_data():
                     return render_template("index.html", data_list=data_list, state=error1)
 
         # 크롤링
+        print("url: ", url)
         cr.main(url)
+        #print(result1)
 
         # 엘라스틱 서치에 데이터 넣기
+        print("app.py: " ,len(cr.result1))
         data = {}
         data["url"] = url
         data["time"] = 0
@@ -52,6 +55,8 @@ def insert_data():
         data["flag"] = 1
         data_list[count] = data
         count = count + 1
+        print(data)
+
         cr.result1 = []
         cr.temp1 = []
         cr.temp2 = []
@@ -87,7 +92,7 @@ def insert_file():
                         return render_template("index.html", data_list=data_list, state=error2)
             # print(line)
             cr.main(line.rstrip('\n'))
-
+            
             data = {}
             data["url"] = line.rstrip('\n')
             data["time"] = 0

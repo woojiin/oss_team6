@@ -62,10 +62,14 @@ def crawling(url):
 	return line1.lower()
 
 def main(url):
+	global result1
 	url1 = url
 	
 	res1 = crawling(url1)
 	result1 = res1.split()
+	print("crawling.py: ",len(result1))
+	print(type(result1))
+	
 #	print(result1)
 	
 	#for w in res1:
@@ -85,9 +89,8 @@ def main(url):
 
 	# print(len(result1))
 
-	
 #if __name__ == '__main__':
-#	url = "https://en.wikipedia.org/wiki/Web_crawler"
+#	url ="https://accumulo.apache.org"
 #	main(url)
 
 	
