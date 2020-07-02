@@ -34,6 +34,7 @@ totaltfidf = []
 top10dic={}
 start=0
 runtime=0
+sortlist =[]
 
 
 
@@ -152,18 +153,42 @@ def main(url):
 	
 	tfidf()
 	sortlist= sorted(totaltfidf, key=(lambda x: x['res']))
+	
+	
 	#print(type(sortlist))
 	reverselist=list(reversed(sortlist))
+	templist=reverselist
 	#print(reverselist)
+	for i in templist:
+		for j in templist:
+			if i['word'] == j['word']:
+				if i['res']>j['res']:
+					reverselist.remove(j)
+	i=0
+	j=0
+	while i<len(reverselist):
+		j=0
+		while j<len(reverselist):
+			#print("1")
+			if i<j:
+				if reverselist[i]['word']==reverselist[j]['word']:
+					if reverselist[i]['res'] == reverselist[j]['res']:
+						reverselist.remove(reverselist[j])
+			j+=1
+		i+=1
 	
+	#reverselist=list(set(reverselist))
+	
+
+				
+	#print(reverselist)
 	top10dic = dict(zip(range(len(reverselist)), reverselist))
 	
-	for i in range(len(sortlist)):
+	for i in range(len(reverselist)):
 		if i>9:
 			del(top10dic[i])
 	runtime = time.time()-start
-	runtime = round(runtime, 3)
-#	print(top10dic)
+	#print(top10dic)
 	
 
 #if __name__ == '__main__':
