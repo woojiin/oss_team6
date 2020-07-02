@@ -129,9 +129,10 @@ def cosine_func():
         print(type(this_url))
 
         cs.main(this_url)
+	
 
         for key in data_list:
             if (data_list[key]["url"] == this_url):
-                data_list[key]["time"] = 111
+                data_list[key]["time"] = cs.runtime
                 return render_template('index.html', data_list=data_list, state=success2)
         return render_template('index.html', data_list=data_list, state=success2)

@@ -6,6 +6,7 @@ import requests
 import nltk
 import numpy
 import crawling
+import time
 nltk.download('punkt')
 nltk.download('stopwords')
 from bs4 import BeautifulSoup
@@ -30,6 +31,8 @@ totalcosim = []
 listurlword=""
 sortlist=[]
 top3dic={}
+start =0
+runtime =0
 
 
 
@@ -90,7 +93,10 @@ def main(url):
 	global result2
 	global sent_list
 	global sortlist
-	
+	global start
+	global start
+	global runtime
+	start = time.time()
 	url1 = url	#받아와야함
 	
 	es = Elasticsearch([{'host': es_host, 'port':es_port}], timeout= 30)
@@ -112,7 +118,7 @@ def main(url):
 	temp = {}
 	query = {"query": {"bool": {"must":[{"match": {"flag": 1}}]}}}
 	docs = es.search(index= 'word', body = query, size = 10)
-
+	print(type(docs['hits']['total']['value']))
 	if docs['hits']['total']['value']>0:	
 		for doc in docs['hits']['hits']:
 			listurlword = ' '.join(doc['_source']['words'])
@@ -135,15 +141,16 @@ def main(url):
 	for i in range(len(sortlist)):
 		if i>3:
 			del(top3dic[i])
+	runtime = time.time()-start
 	
-	
+#	print(runtime)
 	#print(top3dic)
 	
 
 
 #if __name__ == '__main__':
-	#url = "http://climate.apache.org/"
-	#main(url)
+#	url = "http://climate.apache.org/"
+#	main(url)
 	#print("______________________________________")
 
 

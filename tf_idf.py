@@ -7,7 +7,7 @@ import nltk
 import numpy
 import crawling
 import math
-
+import time
 nltk.download('punkt')
 nltk.download('stopwords')
 from bs4 import BeautifulSoup
@@ -32,6 +32,8 @@ stringres1 = ""
 stringres2 =""
 totaltfidf = []
 top3dic={}
+start=0
+runtime=0
 
 
 
@@ -107,8 +109,10 @@ def main(url):
 	global sent_list
 	global sortlist
 	global stringres2
+	global start
+	global runtime
 	
-	
+	start = time.time()
 	url1 = url	#받아와야함
 	
 	es = Elasticsearch([{'host': es_host, 'port':es_port}], timeout= 30)
@@ -156,11 +160,13 @@ def main(url):
 	for i in range(len(sortlist)):
 		if i>9:
 			del(top10dic[i])
-	#print(top10dic)
+	runtime = time.time()-start
+#	print(runtime)
+#	print(top10dic)
 	
 
 #if __name__ == '__main__':
-	#url = "http://climate.apache.org/"
-	#main(url)
+#	url = "http://climate.apache.org/"
+#	main(url)
 
 		
