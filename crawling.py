@@ -65,25 +65,30 @@ def main(url):
 	url1 = url
 	
 	res1 = crawling(url1)
+	result1 = res1.split()
+#	print(result1)
 	
-	swlist = []
+	#for w in res1:
+		
+	
+	#swlist = []
 
-	for sw in stopwords.words("english"):
-		swlist.append(sw)
-	tokenized1 = word_tokenize(res1)
+	#for sw in stopwords.words("english"):
+	#	swlist.append(sw)
+	#tokenized1 = word_tokenize(res1)
 	
 	
 
-	for w in tokenized1:
-		if w not in swlist:
-			result1.append(w)
+	#for w in tokenized1:
+	##	if w not in swlist:
+			#result1.append(w)
 
 	# print(len(result1))
 
 	
 #if __name__ == '__main__':
-	#url = "https://en.wikipedia.org/wiki/Web_crawler"
-	#main(url)
+#	url = "https://en.wikipedia.org/wiki/Web_crawler"
+#	main(url)
 
 	
 
