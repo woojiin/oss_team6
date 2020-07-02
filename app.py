@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, flash
 from elasticsearch import Elasticsearch
 from werkzeug.utils import secure_filename
 
 import crawling as cr
+import CosineSim as cs
 
 es_host = "127.0.0.1"
 es_port = "9200"
@@ -125,6 +126,10 @@ def cosine_func():
         length = len(cosine_url)
         this_url = cosine_url[2:length-2]
         print(this_url)
+        print(type(this_url))
+
+        cs.main(this_url)
+
         for key in data_list:
             if (data_list[key]["url"] == this_url):
                 data_list[key]["time"] = 111
