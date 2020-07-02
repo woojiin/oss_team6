@@ -62,28 +62,36 @@ def crawling(url):
 	return line1.lower()
 
 def main(url):
+	global result1
 	url1 = url
 	
 	res1 = crawling(url1)
+	result1 = res1.split()
+	print("crawling.py: ",len(result1))
+	print(type(result1))
 	
-	swlist = []
+#	print(result1)
+	
+	#for w in res1:
+		
+	
+	#swlist = []
 
-	for sw in stopwords.words("english"):
-		swlist.append(sw)
-	tokenized1 = word_tokenize(res1)
+	#for sw in stopwords.words("english"):
+	#	swlist.append(sw)
+	#tokenized1 = word_tokenize(res1)
 	
 	
 
-	for w in tokenized1:
-		if w not in swlist:
-			result1.append(w)
+	#for w in tokenized1:
+	##	if w not in swlist:
+			#result1.append(w)
 
 	# print(len(result1))
 
-	
 #if __name__ == '__main__':
-	#url = "https://en.wikipedia.org/wiki/Web_crawler"
-	#main(url)
+#	url ="https://accumulo.apache.org"
+#	main(url)
 
 	
 
