@@ -4,3 +4,4 @@ https://calcite.apache.org/
 http://river.apache.org/
 http://ws.apache.org/
 http://oodt.apache.org/
+http://climate.apache.org/

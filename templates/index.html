@@ -55,18 +55,9 @@
 
 <body id="page-top">
 
-{#  <!-- Navigation -->#}
-{#  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">#}
-{#    <div class="container">#}
-{#      <a class="navbar-brand js-scroll-trigger" href="#page-top">Web Page Analysis Service</a>#}
-{#      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">#}
-{#        <span class="navbar-toggler-icon"></span>#}
-{#      </button>#}
-{#    </div>#}
-{#  </nav>#}
 
   <header class="bg-primary text-white">
-    <div class="container text-center" style = "padding: 50px 0 100px;">
+    <div class="container text-center" style = "padding: 70px 0 70px;">
       <h1>Welcome to Web Page Analysis Service</h1><br>
       <p class="lead">Enter url to perform word analysis and similarity analysis</p>
     </div>
@@ -75,8 +66,8 @@
   <section id="about">
     <div class="container" style="padding: 100px 0;">
       <div class="row">
-        <div class="col-lg-8 mx-auto">
-          <h2>type the url or upload the file</h2><br>
+        <div class="col-lg-8 mx-auto" style="text-align: center">
+          <h2 style="text-align: left">type the URL or upload the file</h2><br>
           <!-- <p class="lead">This is a great place to talk about your webpage. This template is purposefully unstyled so you can use it as a boilerplate or starting point for you own landing page designs! This template features:</p>
           <ul>
             <li>Clickable nav links that smooth scroll to page sections</li>
@@ -85,37 +76,62 @@
             <li>Minimal custom CSS so you are free to explore your own unique design options</li>
           </ul>
           <h1>welcome</h1> -->
+
+
         <div>
-            <div>
+            <div  style="text-align: left">
+              <label for="InputSubject1">type URL</label>
               <form method="POST" action="/insert_data">
-                  <div class="input-group">
-                      <input name="url" type="text" class="form-control">
-                      <span class="input-group-btn">
-                          <button type="submit" class="btn btn-default"> Submit </button>
-                      </span>
+                  <div class="input-group mb-3">
+                      <input class="form-control" name="url" type="text" class="form-control">
+                      <div class="input-group-append">
+                          <button type="submit" class="btn btn-outline-secondary"> Submit </button>
+                      </div>
                   </div>
               </form>
-          </div><br><br>
-          <div>
-              <form method="POST" action="/insert_file" enctype="multipart/form-data">
-              <input name="file1" type="file" name="filename">
-              <button type="submit" > Submit </button>
-          </form>
+          </div>
+          <div style="text-align: left" class="col-xs-4">
+              <div class="form-group">
+                <label for="InputSubject1">upload file</label>
+                <form method="POST" action="/insert_file" enctype="multipart/form-data">
+                    <div class="input-group mb-3">
+                        <div class="custom-file" >
+                            <input name="file1" type="file" class="custom-file-input" name="filename" id="inputGroupFile02">
+                            <label class="custom-file-label" for="customFile"> </label>
+                        </div>
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-outline-secondary" > Submit </button>
+                        </div>
+                    </div>
+
+                </form>
+              </div>
           </div>
         </div>
+
+        <script type="application/javascript">
+            $('input[type="file"]').change(function(e){
+                var fileName = e.target.files[0].name;
+                $('.custom-file-label').html(fileName);
+            });
+        </script>
+
           <div>{{ state }}</div>
           <hr>
 
-          <div id="tablediv" style="width : 1025px;">
-            <table border="1" style="border-collapse: collapse; width : 800px; text-align: center;">
-                <tr>
-                    <th style="text-align: center;">URL</th>
-                    <th>처리 시간</th>
-                    <th>전체 단어 수</th>
-                    <th>단어 분석</th>
-                    <th>유사도 분석</th>
-                </tr>
+          <div id="tablediv" style="display: inline-block;">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">URL</th>
+                        <th scope="col">처리시간</th>
+                        <th scope="col">단어수</th>
+                        <th scope="col">단어분석</th>
+                        <th scope="col">유사도분석</th>
+                    </tr>
+                </thead>
                 {% for key, value in data_list.items() %}
+                <tbody>
                 <tr>
                     {% set thisurl = [] %}
                     {% for index, data in value.items() %}
@@ -129,9 +145,10 @@
                             {% endif %}
                         {% endif %}
                     {% endfor %}
-                    <td><form method="POST" action="/words_func"><input name="wordurl" type="hidden" value="{{ thisurl }}"><button type=submit value="단어 분석" class="btn btn-primary">단어 분석</button></form>{% if check2 == 1 %} <script> $(document).ready(function(){ $('#myModal2').modal('show');}); </script>{% endif %}</td>
-                    <td><form method="POST" action="/cosine_func"><input name="cosurl" type="hidden" value="{{ thisurl }}"><button type=submit value="유사도 분석" class="btn btn-primary">유사도 분석</button></form>{% if check == 1 %} <script> $(document).ready(function(){ $('#myModal').modal('show');}); </script>{% endif %}</td>
+                    <td class="text-center align-middle"><form method="POST" action="/words_func"><input name="wordurl" type="hidden" value="{{ thisurl }}"><div class="btn-group"><button type=submit value="단어 분석" class="btn btn-outline-secondary">run</button></div></form>{% if check2 == 1 %} <script> $(document).ready(function(){ $('#myModal2').modal('show');}); </script>{% endif %}</td>
+                    <td class="text-center align-middle"><form method="POST" action="/cosine_func"><input name="cosurl" type="hidden" value="{{ thisurl }}"><div class="btn-group"><button type=submit value="유사도 분석" class="btn btn-outline-secondary">run</button></div></form>{% if check == 1 %} <script> $(document).ready(function(){ $('#myModal').modal('show');}); </script>{% endif %}</td>
                 </tr>
+                </tbody>
                 {% endfor %}
             </table>
         </div>
@@ -144,8 +161,11 @@
     <div class="container" style="padding: 100px 0;">
       <div class="row">
         <div class="col-lg-8 mx-auto">
-          <h2>Services we offer</h2>
-          <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut optio velit inventore, expedita quo laboriosam possimus ea consequatur vitae, doloribus consequuntur ex. Nemo assumenda laborum vel, labore ut velit dignissimos.</p>
+          <h2>How to analyze words using TF-IDF</h2><br>
+          <p class="lead">In information retrieval, tf–idf or TFIDF, short for term frequency–inverse document frequency, is a numerical statistic that is intended to reflect how important a word is to a document in a collection or corpus. It is often used as a weighting factor in searches of information retrieval, text mining, and user modeling. The tf–idf value increases proportionally to the number of times a word appears in the document and is offset by the number of documents in the corpus that contain the word, which helps to adjust for the fact that some words appear more frequently in general. tf–idf is one of the most popular term-weighting schemes today. A survey conducted in 2015 showed that 83% of text-based recommender systems in digital libraries use tf–idf.</p>
+          <p class="lead">Variations of the tf–idf weighting scheme are often used by search engines as a central tool in scoring and ranking a document's relevance given a user query. tf–idf can be successfully used for stop-words filtering in various subject fields, including text summarization and classification.</p>
+          <p class="lead">One of the simplest ranking functions is computed by summing the tf–idf for each query term; many more sophisticated ranking functions are variants of this simple model.</p>
+            <p class="lead"><a href="https://en.wikipedia.org/wiki/Tf–idf">for details...</a></p>
         </div>
       </div>
     </div>
@@ -155,8 +175,10 @@
     <div class="container" style="padding: 100px 0;">
       <div class="row">
         <div class="col-lg-8 mx-auto">
-          <h2>Contact us</h2>
-          <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero odio fugiat voluptatem dolor, provident officiis, id iusto! Obcaecati incidunt, qui nihil beatae magnam et repudiandae ipsa exercitationem, in, quo totam.</p>
+          <h2>How do we check the similarity between websites through cosine similarity?</h2><br>
+          <p class="lead">Cosine similarity is a measure of similarity between two non-zero vectors of an inner product space. It is defined to equal the cosine of the angle between them, which is also the same as the inner product of the same vectors normalized to both have length 1. The cosine of 0° is 1, and it is less than 1 for any angle in the interval (0, π] radians. It is thus a judgment of orientation and not magnitude: two vectors with the same orientation have a cosine similarity of 1, two vectors oriented at 90° relative to each other have a similarity of 0, and two vectors diametrically opposed have a similarity of -1, independent of their magnitude. The cosine similarity is particularly used in positive space, where the outcome is neatly bounded in {\displaystyle [0,1]}[0,1]. The name derives from the term "direction cosine": in this case, unit vectors are maximally "similar" if they're parallel and maximally "dissimilar" if they're orthogonal (perpendicular). This is analogous to the cosine, which is unity (maximum value) when the segments subtend a zero angle and zero (uncorrelated) when the segments are perpendicular.</p>
+            <p class="lead">These bounds apply for any number of dimensions, and the cosine similarity is most commonly used in high-dimensional positive spaces. For example, in information retrieval and text mining, each term is notionally assigned a different dimension and a document is characterised by a vector where the value in each dimension corresponds to the number of times the term appears in the document. Cosine similarity then gives a useful measure of how similar two documents are likely to be in terms of their subject matter.</p>
+            <p class="lead"><a href="https://en.wikipedia.org/wiki/Cosine_similarity">for details...</a></p>
         </div>
       </div>
     </div>
