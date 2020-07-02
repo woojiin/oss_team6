@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request
 from elasticsearch import Elasticsearch
 from werkzeug.utils import secure_filename
+from flask_bootstrap import Bootstrap
 
 import crawling as cr
 import CosineSim as cs
@@ -9,6 +10,7 @@ es_host = "127.0.0.1"
 es_port = "9200"
 
 app = Flask(__name__)
+Bootstrap(app)
 es = Elasticsearch([{'host': es_host, 'port': es_port}], timeout=30)
 
 data_list = {}
@@ -129,10 +131,17 @@ def cosine_func():
         print(type(this_url))
 
         cs.main(this_url)
-	
 
-        for key in data_list:
+    for key in data_list:
             if (data_list[key]["url"] == this_url):
                 data_list[key]["time"] = cs.runtime
+                query = {"query": {"bool": {"must": [{"match": {"flag": 1}}]}}}
+                docs = es.search(index='word', body=query, size=10)
+                if docs['hits']['total']['value'] > 0:
+                    for doc in docs['hits']['hits']:
+                        if doc['_source']['url'] == this_url:
+                            doc['_source']['time'] = cs.runtime
+                            print(doc['_source']['time'])
+                            break
                 return render_template('index.html', data_list=data_list, state=success2)
         return render_template('index.html', data_list=data_list, state=success2)

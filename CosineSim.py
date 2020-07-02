@@ -118,8 +118,8 @@ def main(url):
 	temp = {}
 	query = {"query": {"bool": {"must":[{"match": {"flag": 1}}]}}}
 	docs = es.search(index= 'word', body = query, size = 10)
-	print(type(docs['hits']['total']['value']))
-	if docs['hits']['total']['value']>0:	
+	# print(type(docs['hits']['total']['value']))
+	if docs['hits']['total']['value'] > 0:
 		for doc in docs['hits']['hits']:
 			listurlword = ' '.join(doc['_source']['words'])
 			result2 = []

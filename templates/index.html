@@ -1,35 +1,116 @@
+
+
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>OSP team 6</title>
-	<script language = "javascript">
-	// function showPopup() { window.open{"word_analyze_result.html", "a", "width=400, height =400, left = 100, top=50");}
-	</script>
-    </head>
-    <body>
-        <script type = 'text/javascript' src = "{{url_for('static', filename='table.js') }}"></script>
+<html lang="en">
 
-        <h1>welcome</h1>
-        <form method="POST" action="/insert_data">
-            URL <input name="url" type="text"><br>
-            <button type="submit"> Submit </button>
-        </form>
+<head>
 
-        <form method="POST" action="/insert_file" enctype="multipart/form-data">
-            <input name="file1" type="file" name="filename">
-            <input type="submit" value="Submit">
-        </form>
-        <span>{{ state }}</span>
-        <hr>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-        <div id="tablediv" style="width : 1025px;">
-            <table border="1">
+  <title>OSP team 6</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link rel="stylesheet prefetch" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+</head>
+
+  <!-- Custom styles for this template -->
+  <link href="{{ url_for('static', filename='css/scrolling-nav.css" rel="stylesheet') }}">
+
+  <style>
+    body{
+      background-color: #f5f5f5;
+    }
+    table {
+        border-collapse: collapse;
+        width : 800px;
+        text-align: center;
+    }
+        table td {
+            border: 1px solid black;
+            padding: 15px;
+            text-align: center;
+            width: 200px;
+            height: 50px;
+        }
+        table th {
+            border: 1px solid black;
+            padding: 15px;
+            text-align: center;
+            width: 200px;
+            height: 50px;
+        }
+    button {
+        float:right;
+    }
+    </style>
+
+</head>
+
+<body id="page-top">
+
+{#  <!-- Navigation -->#}
+{#  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">#}
+{#    <div class="container">#}
+{#      <a class="navbar-brand js-scroll-trigger" href="#page-top">Web Page Analysis Service</a>#}
+{#      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">#}
+{#        <span class="navbar-toggler-icon"></span>#}
+{#      </button>#}
+{#    </div>#}
+{#  </nav>#}
+
+  <header class="bg-primary text-white">
+    <div class="container text-center" style = "padding: 50px 0 100px;">
+      <h1>Welcome to Web Page Analysis Service</h1><br>
+      <p class="lead">Enter url to perform word analysis and similarity analysis</p>
+    </div>
+  </header>
+
+  <section id="about">
+    <div class="container" style="padding: 100px 0;">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <h2>type the url or upload the file</h2><br>
+          <!-- <p class="lead">This is a great place to talk about your webpage. This template is purposefully unstyled so you can use it as a boilerplate or starting point for you own landing page designs! This template features:</p>
+          <ul>
+            <li>Clickable nav links that smooth scroll to page sections</li>
+            <li>Responsive behavior when clicking nav links perfect for a one page website</li>
+            <li>Bootstrap's scrollspy feature which highlights which section of the page you're on in the navbar</li>
+            <li>Minimal custom CSS so you are free to explore your own unique design options</li>
+          </ul>
+          <h1>welcome</h1> -->
+        <div>
+            <div>
+              <form method="POST" action="/insert_data">
+                  <div class="input-group">
+                      URL <input name="url" type="text" class="form-control">
+                      <span class="input-group-btn">
+                          <button type="submit" class="btn btn-default"> Submit </button>
+                      </span>
+                  </div>
+              </form>
+          </div><br><br>
+          <div>
+              <form method="POST" action="/insert_file" enctype="multipart/form-data">
+              <input name="file1" type="file" name="filename">
+              <button type="submit" > Submit </button>
+          </form>
+          </div>
+        </div>
+          <div>{{ state }}</div>
+          <hr>
+
+          <div id="tablediv" style="width : 1025px;">
+            <table border="1" style="border-collapse: collapse; width : 800px; text-align: center;">
                 <tr>
-                    <td>url</td>
-                    <td>처리 시간</td>
-                    <td>전체 단어 수</td>
-                    <td>단어 분석</td>
-                    <td>유사도 분석</td>
+                    <th style="text-align: center;">URL</th>
+                    <th>처리 시간</th>
+                    <th>전체 단어 수</th>
+                    <th>단어 분석</th>
+                    <th>유사도 분석</th>
                 </tr>
                 {% for key, value in data_list.items() %}
                 <tr>
@@ -45,12 +126,48 @@
                             {% endif %}
                         {% endif %}
                     {% endfor %}
-                    <td><form method="POST" action="/words_func"><input name="wordurl" type="hidden" value="{{ thisurl }}"><input type=submit value="단어 분석"></form></td>
+                    <td><form method="POST" action="/words_func"><input name="wordurl" type="hidden" value="{{ thisurl }}"><input type=submit value="단어 분석" formaction=""></form></td>
 {#                    <td>{{ thisurl }}</td>#}
                     <td><form method="POST" action="/cosine_func"><input name="cosurl" type="hidden" value="{{ thisurl }}"><input type=submit value="유사도 분석"></form></td>
                 </tr>
                 {% endfor %}
             </table>
         </div>
-    </body>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="bg-light">
+    <div class="container" style="padding: 100px 0;">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <h2>Services we offer</h2>
+          <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut optio velit inventore, expedita quo laboriosam possimus ea consequatur vitae, doloribus consequuntur ex. Nemo assumenda laborum vel, labore ut velit dignissimos.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="container" style="padding: 100px 0;">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <h2>Contact us</h2>
+          <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero odio fugiat voluptatem dolor, provident officiis, id iusto! Obcaecati incidunt, qui nihil beatae magnam et repudiandae ipsa exercitationem, in, quo totam.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">Copyright &copy; open source programming team 6</p>
+    </div>
+    <!-- /.container -->
+  </footer>
+
+</body>
+
 </html>
