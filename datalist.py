@@ -21,8 +21,11 @@ es = Elasticsearch([{'host': es_host, 'port': es_port}], timeout=30)
 
 def processdata():
 	global escount
-	global esdata
+	global esdata 
 	global esdata_list
+	esdata = {}
+	esdata_list = {}
+	escount = 0
 	temp = {}
 	query = {"query": {"bool": {"must":[{"match": {"flag": 1}}]}}}
 	docs = es.search(index= 'word', body = query, size = 10)
@@ -35,11 +38,12 @@ def processdata():
 			esdata["words"] = doc['_source']['words']
 			esdata["flag"] = doc['_source']['flag']
 			esdata_list[escount] = esdata
-			print(esdata)
-			print("")
+			esdata = {}
+			#print(esdata)
+			#print("")
 			escount +=1
 	
-	
+	print(esdata_list)
 
 
 #if __name__ == '__main__':

@@ -5,6 +5,7 @@ from flask_bootstrap import Bootstrap
 
 import crawling as cr
 import CosineSim as cs
+import datalist as dt
 
 es_host = "127.0.0.1"
 es_port = "9200"
@@ -14,6 +15,7 @@ Bootstrap(app)
 es = Elasticsearch([{'host': es_host, 'port': es_port}], timeout=30)
 
 data_list = {}
+do_function = 0
 count = 0
 success = "success : url inserted"
 success2 = "success : cosine similarity function"
@@ -30,13 +32,17 @@ def index():
 def insert_data():
     error = None
     if request.method == 'POST':	
-
+        global data_list
         global count
         # url 받아오기 
         url = request.form['url']
         if url == "":
+           dt.processdata()
+           data_list = dt.esdata_list
            return render_template("index.html", data_list=data_list, state=error0)
         if count != 0:
+            dt.processdata()
+            data_list = dt.esdata_list
             for key in data_list:
                 if data_list[key]["url"] == url:
                     return render_template("index.html", data_list=data_list, state=error1)
@@ -70,6 +76,9 @@ def insert_data():
         res = es.index(index='word', doc_type='url_Data', body=data)
 
         # print(data_list)
+
+        dt.processdata()
+        data_list = dt.esdata_list
                 
         return render_template('index.html', data_list=data_list, state=success)
 
@@ -78,9 +87,12 @@ def insert_file():
     error = None
     if request.method == 'POST':
         global count
+        global data_list
 
         f = request.files['file1']
         if f.filename == '':
+            dt.processdata()
+            data_list = dt.esdata_list
             return render_template("index.html", data_list=data_list, state=error3)
         f.save(secure_filename(f.filename))
 
@@ -89,6 +101,8 @@ def insert_file():
         while line:
             line.replace(" ", "")
             if count != 0:
+                dt.processdata()
+                data_list = dt.esdata_list
                 for key in data_list:
                     if (data_list[key]["url"] == line.rstrip('\n')):
                         return render_template("index.html", data_list=data_list, state=error2)
@@ -117,6 +131,8 @@ def insert_file():
 
             line = file.readline()
 
+        dt.processdata()
+        data_list = dt.esdata_list
         return render_template('index.html', data_list=data_list, state=success)
 
 # @app.route('/words_func', methods=['POST'])
@@ -137,7 +153,7 @@ def cosine_func():
 
         cs.main(this_url)
 
-    for key in data_list:
+        for key in data_list:
             if (data_list[key]["url"] == this_url):
                 data_list[key]["time"] = cs.runtime
                 query = {"query": {"bool": {"must": [{"match": {"flag": 1}}]}}}
@@ -148,5 +164,9 @@ def cosine_func():
                             doc['_source']['time'] = cs.runtime
                             print(doc['_source']['time'])
                             break
+                dt.processdata()
+                data_list = dt.esdata_list
                 return render_template('index.html', data_list=data_list, state=success2)
-    return render_template('index.html', data_list=data_list, state=success2)
+        dt.processdata()
+        data_list = dt.esdata_list
+        return render_template('index.html', data_list=data_list, state=success2)
