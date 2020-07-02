@@ -96,6 +96,7 @@ def main(url):
 	global start
 	global start
 	global runtime
+	global top3dic
 	start = time.time()
 	url1 = url	#받아와야함
 	

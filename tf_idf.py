@@ -31,7 +31,7 @@ swlist = []
 stringres1 = ""
 stringres2 =""
 totaltfidf = []
-top3dic={}
+top10dic={}
 start=0
 runtime=0
 
@@ -111,7 +111,8 @@ def main(url):
 	global stringres2
 	global start
 	global runtime
-	
+	global top10dic	
+
 	start = time.time()
 	url1 = url	#받아와야함
 	
