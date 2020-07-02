@@ -13,6 +13,7 @@ es = Elasticsearch([{'host': es_host, 'port': es_port}], timeout=30)
 data_list = {}
 count = 0
 success = "success : url inserted"
+success2 = "success : cosine similarity function"
 error0 = "fail : invalid url"
 error1 = "fail : duplicate URL"
 error2 = "fail : file has duplicate url"
@@ -45,7 +46,7 @@ def insert_data():
         data["url"] = url
         data["time"] = 0
         data["count"] = len(cr.result1)
-        print(data)
+        # print(data)
         data["words"] = cr.result1
         data["flag"] = 1
         data_list[count] = data
@@ -83,14 +84,14 @@ def insert_file():
                 for key in data_list:
                     if (data_list[key]["url"] == line.rstrip('\n')):
                         return render_template("index.html", data_list=data_list, state=error2)
-            print(line)
+            # print(line)
             cr.main(line.rstrip('\n'))
 
             data = {}
             data["url"] = line.rstrip('\n')
             data["time"] = 0
             data["count"] = len(cr.result1)
-            print(data)
+            # print(data)
             data["words"] = cr.result1
             data["flag"] = 1
             data_list[count] = data
@@ -119,5 +120,13 @@ def insert_file():
 def cosine_func():
     error = None
     if request.method == "POST":
-        url = request.form['cosurl']
-        return render_template('index.html', data_list=data_list, state=success)
+        print("실행중")
+        cosine_url = request.form['cosurl']
+        length = len(cosine_url)
+        this_url = cosine_url[2:length-2]
+        print(this_url)
+        for key in data_list:
+            if (data_list[key]["url"] == this_url):
+                data_list[key]["time"] = 111
+                return render_template('index.html', data_list=data_list, state=success2)
+        return render_template('index.html', data_list=data_list, state=success2)

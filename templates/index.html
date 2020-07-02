@@ -21,9 +21,6 @@
         </form>
         <span>{{ state }}</span>
 
-        <hr>
-        <h1>Result</h1>
-        <h3>URL : {{url}} </h3>
 
         <div id="tablediv" style="width : 1025px;">
             <table border="1">
@@ -36,20 +33,27 @@
                 </tr>
                 {% for key, value in data_list.items() %}
                 <tr>
-                    {% set thisurl = "" %}
+                    {% set thisurl = [] %}
                     {% for index, data in value.items() %}
                         {% if index != "words" and index != "flag" %}
-                            {% if index == url %}
-                                {% set thisurl = data %}
+                            {% if index == "url" %}
+                                <td>{{ data }}</td>
+                                {% if thisurl.append(data) %}{% endif %}
+{#                                 {% set thisurl = data %}#}
+                            {% else %}
+                                <td>{{ data }}</td>
                             {% endif %}
-                            <td>{{ data }}</td>
                         {% endif %}
                     {% endfor %}
-                    <td><form method="POST" action="/words_func"><input name="wordurl" type="hidden" value={{ thisurl }}><input type=submit value="단어 분석"></form></td>
-                    <td><form method="POST" action="/cosine_func"><input name="cosurl" type="hidden" value={{ thisurl }}><input type=submit value="유사도 분석"></form></td>
+                    <td><form method="POST" action="/words_func"><input name="wordurl" type="hidden" value="{{ thisurl }}"><input type=submit value="단어 분석"></form></td>
+{#                    <td>{{ thisurl }}</td>#}
+                    <td><form method="POST" action="/cosine_func"><input name="cosurl" type="hidden" value="{{ thisurl }}"><input type=submit value="유사도 분석"></form></td>
                 </tr>
                 {% endfor %}
             </table>
+            <hr>
+            <h1>Result</h1>
+            <h3>URL : {{ thisurl }} </h3>
         </div>
     </body>
 </html>
