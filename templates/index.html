@@ -192,11 +192,11 @@
 				</div>
 				<div class="modal-body">
 					{% for key, value in cosinedata.items() %}
-                    	{% for index, data in value.items() %}
-							<span>{{data}}  </span>
-                            {% if index == res %}
-                                <br>
-                            {% endif %}
+                        <p>
+                            {% for index, data in value.items() %}
+						    	<span>{{data}}</span>
+						    {% endfor %}
+                        </p>
 						{% endfor %}
 					{% endfor %}
 				</div>
@@ -215,12 +215,11 @@
 				</div>
 				<div class="modal-body">
 					{% for key, value in wordsdata.items() %}
-                    	{% for index, data in value.items() %}
-							<span>{{data}}  </span>
-                            {% if index == res %}
-                                <br>
-                            {% endif %}
-						{% endfor %}
+                        <p>
+                            {% for index, data in value.items() %}
+						    	<span>{{data}}</span>
+						    {% endfor %}
+                        </p>
 					{% endfor %}
 				</div>
 				<div class="modal-footer">
